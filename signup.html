@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up • Route Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-body">
+  <div class="card auth-card">
+    <h2>Create Account</h2>
+    <p class="sub">Join us and start optimizing your routes.</p>
+
+    <label>Full Name</label>
+    <input type="text" id="signup-name" placeholder="Enter your full name" />
+
+    <label>Email</label>
+    <input type="email" id="signup-email" placeholder="Enter your email" />
+
+    <label>Password</label>
+    <input type="password" id="signup-password" placeholder="Create a password" />
+
+    <label>Confirm Password</label>
+    <input type="password" id="signup-confirm" placeholder="Confirm your password" />
+
+    <button class="btn primary full" onclick="handleSignup()">Create Account</button>
+
+    <p class="switch-text">
+      Already have an account? <a href="login.html">Login</a>
+    </p>
+  </div>
+  <script src="auth.js"></script>
+</body>
+</html>

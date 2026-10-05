@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fleet • Route Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="user-chip">
+      <div class="avatar" id="user-avatar">U</div>
+      <div class="user-info">
+        <p class="user-name" id="sidebar-user-name">User</p>
+        <p class="user-role">Logged in</p>
+      </div>
+    </div>
+    <nav class="side-nav">
+      <a class="side-link" href="dashboard.html"><span class="side-icon">🏠</span> <span class="side-label">Dashboard</span></a>
+      <a class="side-link" href="map.html"><span class="side-icon">🗺️</span> <span class="side-label">Route Planner</span></a>
+      <a class="side-link active" href="fleet.html"><span class="side-icon">🚚</span> <span class="side-label">Fleet</span></a>
+      <a class="side-link" href="history.html"><span class="side-icon">📜</span> <span class="side-label">Trip History</span></a>
+      <a class="side-link" href="settings.html"><span class="side-icon">⚙️</span> <span class="side-label">Settings</span></a>
+    </nav>
+    <a class="side-link logout-link" onclick="handleLogout()">
+      <span class="side-icon">🚪</span> <span class="side-label">Logout</span>
+    </a>
+  </aside>
+
+  <main class="main-content">
+    <div class="page active">
+      <div class="page-header">
+        <h2>Fleet Management</h2>
+        <p class="sub">Add and manage vehicles in your fleet</p>
+      </div>
+
+      <div class="card light">
+        <h3>Add Vehicle</h3>
+        <div class="form-grid">
+          <div>
+            <label>Vehicle Name</label>
+            <input type="text" id="f-name" placeholder="e.g., Delivery Van 1" />
+          </div>
+          <div>
+            <label>Plate Number</label>
+            <input type="text" id="f-plate" placeholder="e.g., AP 39 AB 1234" />
+          </div>
+          <div>
+            <label>Vehicle Type</label>
+            <select id="f-type" class="select-input">
+              <option value="bike">🏍️ Bike</option>
+              <option value="car" selected>🚗 Car</option>
+              <option value="truck">🚚 Truck</option>
+              <option value="ev">⚡ Electric (EV)</option>
+            </select>
+          </div>
+          <div>
+            <label>Max Capacity (kg)</label>
+            <input type="number" id="f-capacity" placeholder="e.g., 500" value="500" />
+          </div>
+          <div>
+            <label>Fuel Efficiency (km/L)</label>
+            <input type="number" id="f-efficiency" placeholder="e.g., 15" value="15" step="0.1" />
+          </div>
+          <div>
+            <label>Status</label>
+            <select id="f-status" class="select-input">
+              <option value="active">✅ Active</option>
+              <option value="idle">⏸️ Idle</option>
+              <option value="maintenance">🔧 Maintenance</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn primary full" onclick="addVehicle()">➕ Add to Fleet</button>
+      </div>
+
+      <div class="card light">
+        <h3>My Fleet (<span id="fleet-count">0</span>)</h3>
+        <div id="fleet-list" class="fleet-list">
+          <p class="empty-row">No vehicles yet. Add one above.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div id="toast" class="toast"></div>
+<script src="app.js"></script>
+<script src="fleet.js"></script>
+</body>
+</html>

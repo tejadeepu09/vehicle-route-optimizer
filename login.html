@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login • Route Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-body">
+  <div class="card auth-card">
+    <h2>Login</h2>
+    <p class="sub">Welcome back! Please login to continue.</p>
+
+    <label>Email</label>
+    <input type="email" id="login-email" placeholder="Enter your email" />
+
+    <label>Password</label>
+    <input type="password" id="login-password" placeholder="Enter your password" />
+
+    <button class="btn primary full" onclick="handleLogin()">Login</button>
+
+    <p class="switch-text">
+      Don't have an account? <a href="signup.html">Sign Up</a>
+    </p>
+
+    <p class="demo-hint">Demo: demo@route.com / 1234</p>
+  </div>
+  <script src="auth.js"></script>
+</body>
+</html>

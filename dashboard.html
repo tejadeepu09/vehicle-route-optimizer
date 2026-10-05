@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard • Route Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="user-chip">
+      <div class="avatar" id="user-avatar">U</div>
+      <div class="user-info">
+        <p class="user-name" id="sidebar-user-name">User</p>
+        <p class="user-role">Logged in</p>
+      </div>
+    </div>
+    <nav class="side-nav">
+      <a class="side-link active" href="dashboard.html"><span class="side-icon">🏠</span> <span class="side-label">Dashboard</span></a>
+      <a class="side-link" href="map.html"><span class="side-icon">🗺️</span> <span class="side-label">Route Planner</span></a>
+      <a class="side-link" href="fleet.html"><span class="side-icon">🚚</span> <span class="side-label">Fleet</span></a>
+      <a class="side-link" href="history.html"><span class="side-icon">📜</span> <span class="side-label">Trip History</span></a>
+      <a class="side-link" href="settings.html"><span class="side-icon">⚙️</span> <span class="side-label">Settings</span></a>
+    </nav>
+    <a class="side-link logout-link" onclick="handleLogout()">
+      <span class="side-icon">🚪</span> <span class="side-label">Logout</span>
+    </a>
+  </aside>
+
+  <main class="main-content">
+    <div class="page active">
+      <div class="page-header">
+        <h2>Dashboard</h2>
+        <p class="sub">Overview of your trips and fleet</p>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <p class="stat-label">Total Trips</p>
+          <p class="stat-value" id="stat-trips">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Total Distance</p>
+          <p class="stat-value" id="stat-distance">0 km</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Fleet Size</p>
+          <p class="stat-value" id="stat-fleet">0</p>
+        </div>
+      </div>
+
+      <div class="card light">
+        <h3>Quick Start</h3>
+        <p class="sub">Plan a new route or manage your fleet.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="map.html" class="btn primary">🗺️ Plan a Route</a>
+          <a href="fleet.html" class="btn small">🚚 Manage Fleet</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="app.js"></script>
+<script>
+  loadUserUI();
+  refreshDashboard();
+</script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Route Planner • Route Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="user-chip">
+      <div class="avatar" id="user-avatar">U</div>
+      <div class="user-info">
+        <p class="user-name" id="sidebar-user-name">User</p>
+        <p class="user-role">Logged in</p>
+      </div>
+    </div>
+    <nav class="side-nav">
+      <a class="side-link" href="dashboard.html"><span class="side-icon">🏠</span> <span class="side-label">Dashboard</span></a>
+      <a class="side-link active" href="map.html"><span class="side-icon">🗺️</span> <span class="side-label">Route Planner</span></a>
+      <a class="side-link" href="fleet.html"><span class="side-icon">🚚</span> <span class="side-label">Fleet</span></a>
+      <a class="side-link" href="history.html"><span class="side-icon">📜</span> <span class="side-label">Trip History</span></a>
+      <a class="side-link" href="settings.html"><span class="side-icon">⚙️</span> <span class="side-label">Settings</span></a>
+    </nav>
+    <a class="side-link logout-link" onclick="handleLogout()">
+      <span class="side-icon">🚪</span> <span class="side-label">Logout</span>
+    </a>
+  </aside>
+
+  <main class="main-content map-main">
+    <div class="page active map-page">
+      <div class="map-sidebar-panel">
+
+        <div class="page-header compact">
+          <h2>Route Planner</h2>
+          <p class="sub">Real roads • Traffic • Live GPS • EV • Time windows • Capacity</p>
+        </div>
+
+        <!-- VEHICLE SELECTOR -->
+        <div class="field-block">
+          <label class="field-label">🚘 Select Vehicle from Fleet</label>
+          <select id="vehicle-select" class="select-input" onchange="onVehicleChange()">
+            <option value="">-- Choose from fleet --</option>
+          </select>
+          <div id="vehicle-info" class="vehicle-info hidden"></div>
+        </div>
+
+        <!-- WAYPOINTS -->
+        <div class="waypoints-list" id="waypoints-list">
+          <div class="wp-row">
+            <span class="wp-pin start">A</span>
+            <input type="text" class="wp-input" placeholder="Starting location" data-index="0" />
+            <input type="time" class="wp-time" placeholder="Time" title="Delivery time (optional)" />
+            <input type="number" class="wp-weight" placeholder="kg" title="Weight (optional)" min="0" />
+            <button class="wp-remove" onclick="removeWaypoint(0)" title="Remove">✕</button>
+          </div>
+          <div class="wp-row">
+            <span class="wp-pin end">B</span>
+            <input type="text" class="wp-input" placeholder="Destination" data-index="1" />
+            <input type="time" class="wp-time" title="Delivery time (optional)" />
+            <input type="number" class="wp-weight" placeholder="kg" title="Weight (optional)" min="0" />
+            <button class="wp-remove" onclick="removeWaypoint(1)" title="Remove">✕</button>
+          </div>
+        </div>
+        <p class="helper-text">💡 Columns: Location · Time Window · Weight (kg)</p>
+
+        <div class="map-actions">
+          <button class="btn small" onclick="addWaypoint()">➕ Add Stop</button>
+          <button class="btn small" onclick="useMyLocation()">📍 My Location</button>
+          <button class="btn small" onclick="toggleObstacleMode()" id="obstacle-btn">🚧 Add Event</button>
+          <button class="btn small" onclick="toggleLiveTracking()" id="track-btn">🛰️ Start Live GPS</button>
+          <button class="btn small" onclick="toggleTrafficLayer()" id="traffic-btn">🚦 Show Traffic</button>
+        </div>
+
+        <button class="btn primary full" onclick="findRoute()">🔍 Find Best Route</button>
+
+        <!-- PREDICTIVE ROUTING SUGGESTION -->
+        <div class="predictive-card hidden" id="predictive-card">
+          <h4>🤖 Predictive Suggestion</h4>
+          <p id="predictive-msg">Based on your history...</p>
+        </div>
+
+        <div id="route-results" class="route-results hidden">
+          <h3>Available Routes</h3>
+          <div id="route-list"></div>
+        </div>
+
+        <div class="trip-controls hidden" id="trip-controls">
+          <button class="btn success" id="start-trip-btn" onclick="startTripWithSelectedVehicle()">▶ Start Trip</button>
+          <button class="btn danger" id="end-trip-btn" onclick="endTrip(false)" disabled>⏹ End Trip</button>
+        </div>
+
+        <div class="live-timer hidden" id="live-timer">
+          <p class="timer-label">Trip running...</p>
+          <p class="timer-value" id="timer-value">00:00</p>
+          <p class="timer-sub" id="timer-sub">Estimated: --</p>
+        </div>
+
+        <div class="live-gps-panel hidden" id="live-gps-panel">
+          <h3>🛰️ Live GPS Tracking</h3>
+          <div class="gps-row"><span>Latitude</span><b id="gps-lat">--</b></div>
+          <div class="gps-row"><span>Longitude</span><b id="gps-lng">--</b></div>
+          <div class="gps-row"><span>Speed</span><b id="gps-speed">--</b></div>
+          <div class="gps-row"><span>Accuracy</span><b id="gps-acc">--</b></div>
+        </div>
+
+      </div>
+
+      <div class="map-container">
+        <div id="map"></div>
+        <div class="map-hint" id="map-hint">Click "Add Event" then tap anywhere on the map</div>
+        <div class="traffic-legend hidden" id="traffic-legend">
+          <span><i class="dot green"></i> Clear</span>
+          <span><i class="dot amber"></i> Moderate</span>
+          <span><i class="dot red"></i> Heavy</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- VEHICLE MODAL -->
+<div class="modal-overlay hidden" id="vehicle-modal">
+  <div class="modal-box">
+    <h3>Which vehicle are you travelling in?</h3>
+    <p class="sub">This helps us estimate fuel, time, and capacity.</p>
+    <div class="vehicle-options">
+      <div class="vehicle-option" onclick="startTrip('bike')">
+        <span class="v-icon">🏍️</span>
+        <p class="v-name">Bike</p>
+        <p class="v-desc">Fast, fuel-efficient</p>
+      </div>
+      <div class="vehicle-option" onclick="startTrip('car')">
+        <span class="v-icon">🚗</span>
+        <p class="v-name">Car</p>
+        <p class="v-desc">Balanced, comfortable</p>
+      </div>
+      <div class="vehicle-option" onclick="startTrip('truck')">
+        <span class="v-icon">🚚</span>
+        <p class="v-name">Truck</p>
+        <p class="v-desc">Heavy, slower</p>
+      </div>
+      <div class="vehicle-option" onclick="startTrip('ev')">
+        <span class="v-icon">⚡</span>
+        <p class="v-name">EV</p>
+        <p class="v-desc">Electric, battery range</p>
+      </div>
+    </div>
+    <button class="btn small" onclick="closeVehicleModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- POPUP MODAL -->
+<div class="modal-overlay hidden" id="popup-modal">
+  <div class="modal-box small-box">
+    <h3 id="popup-title">Alert</h3>
+    <p class="sub" id="popup-msg">Message</p>
+    <div class="popup-actions">
+      <button class="btn primary" onclick="closePopup()">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- ROAD EVENT MODAL -->
+<div class="modal-overlay hidden" id="obstacle-modal">
+  <div class="modal-box">
+    <h3>🚧 Report Road Event</h3>
+    <p class="sub">What kind of event is this?</p>
+    <div class="vehicle-options">
+      <div class="vehicle-option" onclick="placeObstacle('construction')">
+        <span class="v-icon">🚧</span><p class="v-name">Construction</p>
+      </div>
+      <div class="vehicle-option" onclick="placeObstacle('traffic')">
+        <span class="v-icon">🚗</span><p class="v-name">Traffic Jam</p>
+      </div>
+      <div class="vehicle-option" onclick="placeObstacle('accident')">
+        <span class="v-icon">⚠️</span><p class="v-name">Accident</p>
+      </div>
+      <div class="vehicle-option" onclick="placeObstacle('closure')">
+        <span class="v-icon">🚫</span><p class="v-name">Road Closure</p>
+      </div>
+      <div class="vehicle-option" onclick="placeObstacle('event')">
+        <span class="v-icon">🎉</span><p class="v-name">Public Event</p>
+      </div>
+      <div class="vehicle-option" onclick="placeObstacle('flood')">
+        <span class="v-icon">🌊</span><p class="v-name">Flooding</p>
+      </div>
+    </div>
+    <button class="btn small" onclick="cancelObstacle()">Cancel</button>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="app.js"></script>
+<script src="map.js"></script>
+</body>
+</html>

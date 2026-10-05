@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trip History • Route Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="user-chip">
+      <div class="avatar" id="user-avatar">U</div>
+      <div class="user-info">
+        <p class="user-name" id="sidebar-user-name">User</p>
+        <p class="user-role">Logged in</p>
+      </div>
+    </div>
+    <nav class="side-nav">
+      <a class="side-link" href="dashboard.html"><span class="side-icon">🏠</span> <span class="side-label">Dashboard</span></a>
+      <a class="side-link" href="map.html"><span class="side-icon">🗺️</span> <span class="side-label">Route Planner</span></a>
+      <a class="side-link" href="fleet.html"><span class="side-icon">🚚</span> <span class="side-label">Fleet</span></a>
+      <a class="side-link active" href="history.html"><span class="side-icon">📜</span> <span class="side-label">Trip History</span></a>
+      <a class="side-link" href="settings.html"><span class="side-icon">⚙️</span> <span class="side-label">Settings</span></a>
+    </nav>
+    <a class="side-link logout-link" onclick="handleLogout()">
+      <span class="side-icon">🚪</span> <span class="side-label">Logout</span>
+    </a>
+  </aside>
+
+  <main class="main-content">
+    <div class="page active">
+      <div class="page-header">
+        <h2>Trip History</h2>
+        <p class="sub">All your completed trips are stored below.</p>
+      </div>
+
+      <div class="card light">
+        <input type="text" id="history-search" placeholder="🔍 Search by from / to / vehicle..."
+               oninput="renderHistory()" class="search-input" />
+
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>#</th><th>From</th><th>To</th><th>Vehicle</th>
+              <th>Start</th><th>End</th><th>Duration</th><th>Distance</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="history-body">
+            <tr><td colspan="9" class="empty-row">No trips yet.</td></tr>
+          </tbody>
+        </table>
+
+        <button class="btn danger full" onclick="clearHistory()">🗑 Clear All History</button>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="app.js"></script>
+<script> loadUserUI(); renderHistory(); </script>
+</body>
+</html>

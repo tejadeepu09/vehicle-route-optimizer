@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings • Route Optimizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="user-chip">
+      <div class="avatar" id="user-avatar">U</div>
+      <div class="user-info">
+        <p class="user-name" id="sidebar-user-name">User</p>
+        <p class="user-role">Logged in</p>
+      </div>
+    </div>
+    <nav class="side-nav">
+      <a class="side-link" href="dashboard.html"><span class="side-icon">🏠</span> <span class="side-label">Dashboard</span></a>
+      <a class="side-link" href="map.html"><span class="side-icon">🗺️</span> <span class="side-label">Route Planner</span></a>
+      <a class="side-link" href="fleet.html"><span class="side-icon">🚚</span> <span class="side-label">Fleet</span></a>
+      <a class="side-link" href="history.html"><span class="side-icon">📜</span> <span class="side-label">Trip History</span></a>
+      <a class="side-link active" href="settings.html"><span class="side-icon">⚙️</span> <span class="side-label">Settings</span></a>
+    </nav>
+    <a class="side-link logout-link" onclick="handleLogout()">
+      <span class="side-icon">🚪</span> <span class="side-label">Logout</span>
+    </a>
+  </aside>
+
+  <main class="main-content">
+    <div class="page active">
+      <div class="page-header">
+        <h2>Settings</h2>
+        <p class="sub">Manage your account preferences</p>
+      </div>
+
+      <div class="card light">
+        <label>Display Name</label>
+        <input type="text" id="settings-name" placeholder="Enter your name" />
+        <button class="btn primary full" onclick="saveName()">Save Name</button>
+      </div>
+
+      <div class="card light">
+        <h3>Danger Zone</h3>
+        <p class="sub">This will erase all trip data and fleet. Cannot be undone.</p>
+        <button class="btn danger full" onclick="resetAllData()">⚠️ Reset All Data</button>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="app.js"></script>
+<script> loadUserUI(); loadSettings(); </script>
+</body>
+</html>
